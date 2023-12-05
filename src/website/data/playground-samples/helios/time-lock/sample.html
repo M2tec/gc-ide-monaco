@@ -1,48 +1,98 @@
 {
     "type": "script",
-    "title": "Simple transaction",
-    "description": "A simple transaction with GameChanger",
-    "exportAs": "CoinSendingDemo",
+    "title": "Lock script",
+    "description": "This contract will unlock some tokens",
+    "exportAs": "Lock_Demo",
     "return": {
         "mode": "last"
     },
     "run": {
-        "stage1_build_transaction": {
+        "dependencies": {
+            "type": "script",
+            "run": {
+                "datum": "--datum--",
+                "lock": "--redeemer--",
+                "stakeCredential": {
+                    "type": "data",
+                    "value": "ad03a4ae45b21f50fde67956365cff94db41bc08a2c2862403d8a234"
+                },
+                "contract": {
+                    "type": "plutusScript",
+                    "script": {
+                        "scriptHex": "--script--",
+                        "lang": "plutus_v2"
+                    }
+                },
+                "address": {
+                    "type": "buildAddress",
+                    "name": "ContractAddress",
+                    "addr": {
+                        "spendScriptHashHex": "{get('cache.dependencies.contract.scriptHashHex')}",
+                        "stakePubKeyHashHex": "{get('cache.dependencies.stakeCredential')}"
+                    }
+                }
+            }
+        },
+        "buildLock": {
             "type": "buildTx",
-            "title": "1 tADA",
-            "description": "This is a payment request. https://gamechanger.finance/",
-            "name": "Unsigned Demo Transaction",
+            "name": "built-lock",
             "tx": {
                 "outputs": [
                     {
-                        "address": "addr_test1qrl07u9ssdtdwtzhrt0zrrr79yejxhfvmsmjt9jxqyaz0ktp6ydulqht6r9z4ld0jms3a3c7gw45u32vhc2ftdp2f6rqvz02jw",
-                        "assets": [
-                            {
-                                "policyId": "ada",
-                                "assetName": "ada",
-                                "quantity": "1000000"
-                            }
-                        ]
+                        "address": "{get('cache.dependencies.address')}",
+                        "datum": {
+                            "datumHashHex": "{get('cache.dependencies.datum.dataHashHex')}"
+                        },
+                        "assets": "{get('cache.dependencies.lock')}",
+                        "idPattern":"locked"
                     }
-                ]
+                ],
+                "options": {
+                    "changeOptimizer": "NO"
+                }
             }
         },
-        "stage2_sign_transaction": {
+        "signLock": {
             "type": "signTxs",
-            "namePattern": "Signed Demo Transaction",
+            "namePattern": "signed-lock",
             "detailedPermissions": false,
             "txs": [
-                "{get('cache.stage1_build_transaction.txHex')}"
+                "{get('cache.buildLock.txHex')}"
             ]
         },
-        "stage3_submit_transaction": {
+        "submitLock": {
             "type": "submitTxs",
-            "namePattern": "Submitted Demo Transaction",
-            "txs": "{get('cache.stage2_sign_transaction')}"
+            "namePattern": "submitted-lock",
+            "txs": "{get('cache.signLock')}"
         },
-        "stage4_export_results": {
-            "type": "macro",
-            "run": "{get('cache.stage1_build_transaction.txHash')}"
+        "finally": {
+            "type": "script",
+            "run": {
+                "lock": {
+                    "type": "macro",
+                    "run": "{get('cache.dependencies.lock')}"
+                },
+                "smartContract": {
+                    "type": "macro",
+                    "run": "{get('cache.dependencies.contract.scriptHex')}"
+                },
+                "smartContractHash": {
+                    "type": "macro",
+                    "run": "{get('cache.dependencies.contract.scriptHashHex')}"
+                },
+                "smartContractAddress": {
+                    "type": "macro",
+                    "run": "{get('cache.dependencies.address')}"
+                },
+                "lockTx": {
+                    "type": "macro",
+                    "run": "{get('cache.buildLock.txHash')}"
+                },
+                "lockUTXO": {
+                    "type": "macro",
+                    "run": "{get('cache.buildLock.indexMap.output.locked')}"
+                }
+            }
         }
     }
 }
