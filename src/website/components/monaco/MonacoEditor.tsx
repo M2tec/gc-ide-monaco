@@ -139,6 +139,24 @@ export class MonacoEditor extends React.Component<
 	constructor(props: any) {
 		super(props);
 		this.state = { contentHeight: undefined };
+
+		monaco.languages.register({id:'helios'})
+
+		let keywords = ['spending', 'struct', 'func', 'Int']
+		monaco.languages.setMonarchTokensProvider('helios', {
+			keywords,
+			tokenizer: {
+				root: [
+			[ /@?[a-zA-Z][\w$]*/, {
+				cases: {
+					'@keywords': 'keyword',
+					'@default': 'variable',
+				} 
+			}],
+			[/".*?"/, 'string'],
+			[/\/\//, 'comment'],
+		]
+		}})
 	}
 	render() {
 		const heightInfo = this.props.height || { kind: "fill" };

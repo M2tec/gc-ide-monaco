@@ -85,7 +85,7 @@ export class PlaygroundPageContent extends React.Component<
 											}
 										>
 											<Editor
-												language={"javascript"}
+												language={"helios"}
 												value={ref(model, "contract")}
 											/>
 										</LabeledEditor>
