@@ -17,8 +17,8 @@ export function projectEquals(
 	project2: IPlaygroundProject
 ): boolean {
 	return (
-		normalizeLineEnding(project1.css) ===
-			normalizeLineEnding(project2.css) &&
+		normalizeLineEnding(project1.datum) ===
+			normalizeLineEnding(project2.datum) &&
 		normalizeLineEnding(project1.html) ===
 			normalizeLineEnding(project2.html) &&
 		normalizeLineEnding(project1.contract) === normalizeLineEnding(project2.contract)

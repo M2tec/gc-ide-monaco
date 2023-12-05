@@ -40,7 +40,6 @@ export function getPlaygroundExamples(): PlaygroundExampleChapter[] {
 		.keys()
 		.filter((k) => k.endsWith(`/${chapterFileName}`))) {
 		const chapterInfo = descriptions(chapterKey);
-		console.log(chapterInfo)
 		const path = chapterKey.substring(
 			0,
 			chapterKey.length - chapterFileName.length
@@ -57,7 +56,6 @@ export function getPlaygroundExamples(): PlaygroundExampleChapter[] {
 				);
 				
 				const description = descriptions(key);
-				console.log(description)
 				return {
 					title: description.title,
 					id: path.replace("./", "").replaceAll("/", "-"),
