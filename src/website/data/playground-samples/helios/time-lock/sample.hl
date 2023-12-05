@@ -1,0 +1,17 @@
+spending time_lock
+
+struct Datum {
+    lockUntil:   Time
+    owner:       PubKeyHash // the owner can always unlock the assets
+    beneficiary: PubKeyHash // beneficiary can only unlock the assets after 'lockUntil'
+}
+
+func main(datum: Datum, _, ctx: ScriptContext) -> Bool {
+    tx: Tx = ctx.tx;
+    now: Time = tx.time_range.start;
+
+    tx.is_signed_by(datum.owner) || (
+        tx.is_signed_by(datum.beneficiary) &&
+        now > datum.lockUntil
+    )
+}

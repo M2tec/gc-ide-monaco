@@ -1,0 +1,48 @@
+{
+    "type": "script",
+    "title": "Simple transaction",
+    "description": "A simple transaction with GameChanger",
+    "exportAs": "CoinSendingDemo",
+    "return": {
+        "mode": "last"
+    },
+    "run": {
+        "stage1_build_transaction": {
+            "type": "buildTx",
+            "title": "1 tADA",
+            "description": "This is a payment request. https://gamechanger.finance/",
+            "name": "Unsigned Demo Transaction",
+            "tx": {
+                "outputs": [
+                    {
+                        "address": "addr_test1qrl07u9ssdtdwtzhrt0zrrr79yejxhfvmsmjt9jxqyaz0ktp6ydulqht6r9z4ld0jms3a3c7gw45u32vhc2ftdp2f6rqvz02jw",
+                        "assets": [
+                            {
+                                "policyId": "ada",
+                                "assetName": "ada",
+                                "quantity": "1000000"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "stage2_sign_transaction": {
+            "type": "signTxs",
+            "namePattern": "Signed Demo Transaction",
+            "detailedPermissions": false,
+            "txs": [
+                "{get('cache.stage1_build_transaction.txHex')}"
+            ]
+        },
+        "stage3_submit_transaction": {
+            "type": "submitTxs",
+            "namePattern": "Submitted Demo Transaction",
+            "txs": "{get('cache.stage2_sign_transaction')}"
+        },
+        "stage4_export_results": {
+            "type": "macro",
+            "run": "{get('cache.stage1_build_transaction.txHash')}"
+        }
+    }
+}
