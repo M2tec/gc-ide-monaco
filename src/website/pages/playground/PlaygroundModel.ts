@@ -31,6 +31,31 @@ import {
 import { BisectModel } from "./BisectModel";
 import { LocationModel } from "./LocationModel";
 
+
+import gc from '@gamechanger-finance/gc';
+
+// async function build_GC_url(hContract: string) {
+async function build_GC_url() {
+    // const Buffer = gc.utils.Buffer;                  
+    // const heliosCode = hContract
+    // let res = Buffer.from(heliosCode).toString('hex')
+
+    // lock_script.run.dependencies.run.contract.script={
+    //         "heliosCode": `{hexToStr('${contractHex}')}`,
+    //         "version": "latest"
+    // }
+	let lock_script = {"test": 5};
+    const url=await gc.encode.url({
+            input:JSON.stringify(lock_script),
+            apiVersion:"2",
+            network:"preprod",
+            //encoding:"gzip",
+      });
+    return url;
+}
+
+
+
 export class PlaygroundModel {
 	public readonly dispose = Disposable.fn();
 	public readonly settings = new SettingsModel();
@@ -70,6 +95,27 @@ export class PlaygroundModel {
 		}
 		return this._wasEverNonFullScreen;
 	}
+
+    public deploy(): void {
+		console.log("Deploy");
+		let ct = this.contract
+		let dt = this.datum;
+		let rd = this.redeemer;
+		let gc = this.html;
+		console.log(ct);
+
+		let res = build_GC_url();
+		console.log(res);
+
+		// let url = buildActionUrl_lock(ct)
+		// console.log(url);
+		// lockNumber = parseInt(lockInput.value);
+		// lock_script.run.dependencies.run.datum.data.fromJSON.obj.int = lockNumber;
+		
+		// lock_script.returnURLPattern = window.location.origin + window.location.pathname;
+    }
+
+
 
 	@computed.struct
 	get monacoSetup(): IMonacoSetup {
@@ -273,10 +319,10 @@ export class PlaygroundModel {
 			.replaceAll("\\", "\\\\")
 			.replaceAll("$", "\\$$$$")
 			.replaceAll("`", "\\`");
-		const newJs = js.replace(regexp, "$1" + str + "`");
+		const newJs = contract.replace(regexp, "$1" + str + "`");
 		const autoReload = this.settings.autoReload;
 		this.settings.autoReload = false;
-		this.js = newJs;
+		this.contract = newJs;
 		this.settings.autoReload = autoReload;
 	}
 
