@@ -44,7 +44,6 @@ async function buildActionUrl_lock(lock_script: Object) {
 
 
 	  window.open(url)
-	return url;
 }
 
 export class PlaygroundModel {
@@ -77,8 +76,6 @@ export class PlaygroundModel {
 		let dt = this.datum;
 		let rd = this.redeemer;
 		let gc_script = this.html;
-
-		console.log(dt)
 		
 		const Buffer = gc.utils.Buffer;                  
 		let res = Buffer.from(this.contract).toString('hex')
@@ -93,15 +90,6 @@ export class PlaygroundModel {
 		let y = {"number": 5}
 		console.log(y)
 		buildActionUrl_lock(tx_object)
-
-
-
-		// let url = buildActionUrl_lock(ct)
-		// console.log(url);
-		// lockNumber = parseInt(lockInput.value);
-		// lock_script.run.dependencies.run.datum.data.fromJSON.obj.int = lockNumber;
-		
-		// lock_script.returnURLPattern = window.location.origin + window.location.pathname;
 	}
 
 	public get previewShouldBeFullScreen(): boolean {
@@ -321,10 +309,10 @@ export class PlaygroundModel {
 			.replaceAll("\\", "\\\\")
 			.replaceAll("$", "\\$$$$")
 			.replaceAll("`", "\\`");
-		const newJs = js.replace(regexp, "$1" + str + "`");
+		const newJs = contract.replace(regexp, "$1" + str + "`");
 		const autoReload = this.settings.autoReload;
 		this.settings.autoReload = false;
-		this.js = newJs;
+		this.contract = newJs;
 		this.settings.autoReload = autoReload;
 	}
 
