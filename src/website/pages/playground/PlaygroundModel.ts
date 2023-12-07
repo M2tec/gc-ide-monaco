@@ -31,6 +31,22 @@ import {
 import { BisectModel } from "./BisectModel";
 import { LocationModel } from "./LocationModel";
 
+const gc = window.gc;
+
+async function buildActionUrl_lock(lock_script: Object) {
+	const url = await gc.encode.url({
+		input:JSON.stringify(lock_script),
+		apiVersion:"2",
+		network:"preprod",
+		//encoding:"gzip",
+	  });
+	  console.log(url)
+
+
+	  window.open(url)
+	return url;
+}
+
 export class PlaygroundModel {
 	public readonly dispose = Disposable.fn();
 	public readonly settings = new SettingsModel();
@@ -54,6 +70,38 @@ export class PlaygroundModel {
 
 	public reload(): void {
 		this.reloadKey++;
+	}
+
+	public deploy(): void {
+		console.log("Deploy");
+		let dt = this.datum;
+		let rd = this.redeemer;
+		let gc_script = this.html;
+
+		console.log(dt)
+		
+		const Buffer = gc.utils.Buffer;                  
+		let res = Buffer.from(this.contract).toString('hex')
+		
+		let res2 = gc_script.replace("--script--", res)
+		let res3 = res2.replace('"--datum--"', dt)
+		let res4 = res3.replace('"--redeemer--"', rd)
+		console.log(res4)
+
+		let tx_object = JSON.parse(res4)
+
+		let y = {"number": 5}
+		console.log(y)
+		buildActionUrl_lock(tx_object)
+
+
+
+		// let url = buildActionUrl_lock(ct)
+		// console.log(url);
+		// lockNumber = parseInt(lockInput.value);
+		// lock_script.run.dependencies.run.datum.data.fromJSON.obj.int = lockNumber;
+		
+		// lock_script.returnURLPattern = window.location.origin + window.location.pathname;
 	}
 
 	public get previewShouldBeFullScreen(): boolean {

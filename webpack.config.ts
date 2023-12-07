@@ -144,6 +144,7 @@ function getHtml(): string {
 	<head>
 	<meta charset="utf-8">
 	<title>Gamechanger IDE</title>
+	<script src="https://cdn.jsdelivr.net/npm/@gamechanger-finance/gc/dist/browser.min.js"></script>
 	</head>
 	<body>
 	</body>

@@ -167,7 +167,7 @@ export class PlaygroundPageContent extends React.Component<
 												fontSize: 20,
 												padding: "0px 4px",
 											}}
-											onClick={() => model.reload()}
+											onClick={() => model.deploy()}
 										/>
 
 										<Button
